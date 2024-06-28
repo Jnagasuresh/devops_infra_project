@@ -1,0 +1,3 @@
+- Create a backedn solution to store the terraform statefile
+- Store the statefile under a folder called as 'infrastate' inside the bucket
+- Mention the bucket name dynamically during the runtime (Terraform apply)

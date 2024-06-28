@@ -17,13 +17,13 @@ resource "google_compute_subnetwork" "tf-subnet" {
 }
 
 # Create a subnet for sonarqube
-# resource "google_compute_subnetwork" "sonarqube-subnet" {
-#   name = "${var.vpc_name}-sonarqube-subnet"
-#   network = google_compute_network.tf-vpc.name # Arguments
-#   # network = var.vpc_name
-#   region = "us-east1"
-#   ip_cidr_range = "10.5.0.0/16"
-# }
+resource "google_compute_subnetwork" "sonarqube-subnet" {
+  name = "${var.vpc_name}-sonarqube-subnet"
+  network = google_compute_network.tf-vpc.name # Arguments
+  # network = var.vpc_name
+  region = "us-east1"
+  ip_cidr_range = "10.5.0.0/16"
+}
 
 # This will create firewalls for the i27-ecommerce-vpc
 resource "google_compute_firewall" "tf-allow-ports" {
@@ -79,13 +79,13 @@ resource "google_compute_instance" "tf-vm-instances" {
         network_tier = "PREMIUM"
       }
     network = google_compute_network.tf-vpc.name
-    // Below is for subnetwork 
-     subnetwork  = google_compute_subnetwork.tf-subnet.name
-   // subnetwork = each.key == "sonarqube" ? google_compute_subnetwork.sonarqube-subnet.name : google_compute_subnetwork.tf-subnet.name
+     // Below is for subnetwork 
+     //subnetwork  = google_compute_subnetwork.tf-subnet.name
+     subnetwork = each.key == "sonarqube" ? google_compute_subnetwork.sonarqube-subnet.name : google_compute_subnetwork.tf-subnet.name
   }
   
   metadata = {
-    ssh-keys = "${var.vm_user}:${tls_private_key.ssh-key.public_key_openssh}"
+    ssh-keys = "lalitha.jonna19:${tls_private_key.ssh-key.public_key_openssh}"
   }
   # Connection 
   connection {
@@ -102,23 +102,25 @@ resource "google_compute_instance" "tf-vm-instances" {
     # if otherthan ansible, execute other.sh
     # condition ? success : Failure
     source =  each.key == "ansible" ? "ansible.sh" : "other.sh"     # Conditional 
-    destination = each.key == "ansible" ? "/home/${var.vm_user}/ansible.sh" : "/home/${var.vm_user}/other.sh"
+    destination = each.key == "ansible" ? "/home/lalitha.jonna19/ansible.sh" : "/home/lalitha.jonna19/other.sh"
   }
 
   # In ansible vm, ansibl.sh should execute
-  provisioner "remote-exec" {
-    inline = [ 
-      each.key == "ansible" ? "chmod +x /home/${var.vm_user}/ansible.sh && sh /home/${var.vm_user}/ansible.sh" : "echo 'Skipping the Command!!!!'"
-     ]
-  }
+  #  provisioner "remote-exec" {
+  #   inline = [ 
+  #     each.key == "ansible" ? "chmod +x /home/lalitha.jonna19/ansible.sh && sh /home/lalitha.jonna19/ansible.sh" : "echo 'Skipping the Command!!!!'"
+  #    ]
+  # }
+    provisioner "remote-exec" {
+      inline = [
+        each.key == "ansible" ? "sudo chmod +x /home/lalitha.jonna19/ansible.sh && sh /home/lalitha.jonna19/ansible.sh || echo 'Failed to execute ansible.sh'" : "echo 'Skipping the Command!!!!'"
+      ]
+    }
 
   # Copy the private key to all the machines
-
 }
 
 # Data block to get images 
-
-
 data "google_compute_image" "ubuntu_image" {
   family = "ubuntu-2004-lts"
   project = "ubuntu-os-cloud"
