@@ -78,6 +78,19 @@ git push -u origin main
 >ssh -i /path/to/ssh-key lalitha.jonna19@10.1.0.3
 
 
+**To watch the password**
+> sudo cat /etc/password
+
+**Linux frequently used commands**
+```
+sudo vim /etc/ssh/sshd_config
+service ssh restart
+apt install sshpass
+```
+
+**To Remove all the containers in 
+> docker rm $(docker ps -aq) -f
+
 **Node ips**
 ```
 instance_ips = {

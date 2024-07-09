@@ -120,6 +120,8 @@ resource "google_compute_instance" "tf-vm-instances" {
   # Copy the private key to all the machines
 }
 
+
+
 # Data block to get images 
 data "google_compute_image" "ubuntu_image" {
   family = "ubuntu-2004-lts"

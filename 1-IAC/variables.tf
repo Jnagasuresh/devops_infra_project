@@ -47,6 +47,8 @@ variable "instances" {
   }
 }
 
+
+
 variable "vm_user" {
   default = "lalitha.jonna19" # -var=vm_user=mahers
 }
