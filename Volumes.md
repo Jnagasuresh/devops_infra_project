@@ -15,5 +15,5 @@ volumes (k8s) ----- volumes (docker)
  * Persistent volume claims(pvc) are at namespace level.
 
  ![volume_dia1](/images/volume1.png)
- 
- [volumes](/docs/10.pdf)
+
+ [volumes](/docs/svc_volume.pdf)
