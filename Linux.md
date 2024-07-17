@@ -11,6 +11,10 @@ adduser newuser
 # Add the user to the sudo group
 usermod -aG sudo newuser
 
+# altrnate method Add the user to the sudo group
+sudo visudo
+nags  ALL=(ALL:ALL) ALL
+
 # Verify sudo permissions
 su - newuser
 sudo ls /root
