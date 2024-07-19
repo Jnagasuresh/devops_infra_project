@@ -97,7 +97,7 @@ spec:
 
 * The binding between pv and pvc is based on accessModes. if accessModes match, then pv and pvc are binded each other
 
-## Respecitve deployment
+## Respective deployment
 ![claiming pv](/images/PV-pvc-pod.png)
 ```
 apiVersion: apps/v1
@@ -150,14 +150,14 @@ cd /output/
 
 * below snipppet it for Storage class
   ```
-apiVersion: storage.k8s.ip/v1
-kind: StorageClass
-metadata:
-  name: gold
-provisioner: kubernetes.io/gce-pd
-allowVolumeExpansion: true
-parameters:
-  type: pd-ssd
+    apiVersion: storage.k8s.ip/v1
+    kind: StorageClass
+    metadata:
+    name: gold
+    provisioner: kubernetes.io/gce-pd
+    allowVolumeExpansion: true
+    parameters:
+    type: pd-ssd
 
   ```
 
@@ -205,3 +205,6 @@ spec:
      persistentVolumeClaim:
        claimName: pvc-claim
   ```
+
+  * K8s CICD
+  ![Kubernetes Ci CD](/images/cicd.gif)
