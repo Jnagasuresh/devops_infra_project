@@ -1,3 +1,5 @@
+
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,8 +20,10 @@ spec:
           image: devopswithcloudhub/nginx:blue
           ports:
             - containerPort: 80
-
+```
 ---
+
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -34,8 +38,10 @@ spec:
     - port: 80
       targetPort: 80
       nodePort: 30080  # Optional: specify a fixed node port if required, or let Kubernetes assign a random one
-      
+```   
 ---
+
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -56,8 +62,9 @@ spec:
           image: devopswithcloudhub/nginx:green
           ports:
             - containerPort: 80
-
+```
 ---
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -72,8 +79,9 @@ spec:
     - port: 80
       targetPort: 80
       nodePort: 30080  # Optional: specify a fixed node port if required, or let Kubernetes assign a random one
-      
+```  
 ---
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,8 +102,9 @@ spec:
           image: devopswithcloudhub/nginx:orange
           ports:
             - containerPort: 80
-
+```
 ---
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -110,8 +119,9 @@ spec:
     - port: 80
       targetPort: 80
       nodePort: 30080  # Optional: specify a fixed node port if required, or let Kubernetes assign a random one
-      
+```
 ---
+```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -142,4 +152,4 @@ spec:
                 port:
                   number: 80
 
-
+```
