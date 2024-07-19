@@ -160,6 +160,10 @@ cd /output/
     type: pd-ssd
 
   ```
+  
+ <p>
+ __allowVolumeExpansion__ property from above manifest is helping to expand the size on demand basis, with out this attribute, once memory is full with existing size, memory can't expand.
+ </p>
 
   ```
   apiVersion: v1
@@ -173,6 +177,29 @@ cd /output/
       requests:
         storage: 20Gi
   ```
+* When dynamic volume allocation, once storage class is created, one can directly create the PVC, System will automatically creates the respective PV and binding.
+
+* So in Static type,
+  - Storage admin creates nfs stroage slots (external)
+  - K8s Admin would responsible to create PV's (persistenet volues) at cluster level
+  - PVC (persistent volume claims) will be created at name space level.
+  - Volumes are created in Pod's
+  - Volume mounts will be created at Container level
+![Static Volume](/images/Static_Volume.png)
+
+### Mappings
+* External to PV --> Use storage type in PV
+* PV to PVC    --> mapping is will happen based on accessMode
+* PVC  to  POD --> mapping happens based on pvc name in POD manifest
+* POD to Container -> volumeMount attribut.
+
+
+* In Dynamic provising
+ - Storage class will be created 
+ - Then create PVC's at name space levle, PV will be created automatically
+ - Volumes are created in Pod's
+  - Volume mounts will be created at Container level
+
   ```
   apiVersion: v1
   kind: PersistentVolumeClaim
@@ -208,3 +235,53 @@ spec:
 
   * K8s CICD
   ![Kubernetes Ci CD](/images/cicd.gif)
+
+  ## Configure Your .NET API to Write Logs to the Mounted Volume
+
+  Ensure your .NET API is configured to write logs to the /app/logs directory, which is mounted to the Kubernetes volume.
+
+In your .NET application, configure logging to write to a file in the /app/logs directory. For example, using Serilog:
+
+```
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
+using System.IO;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File("/app/logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        try
+        {
+            Log.Information("Starting web host");
+            CreateHostBuilder(args).Build().Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Host terminated unexpectedly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseSerilog() // Add this line
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+}
+```
