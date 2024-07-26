@@ -23,9 +23,9 @@ Service: 3 types of redirections
 
 * in svc, 3 things are important..they are (port, node port, target port)
 * while creatin service, if you don't mention the port, bydefault, kubernetes will take target port as service port
-*  Service would spance across multiple nodes, in this scenario, service will open node port in all available nodes
+*  Service would span across multiple nodes, in this scenario, service will open node port in all available nodes
 *  in vpn, service will 
-*  pod, deployment, Service would bound to namespace
+*  Pod, deployment, Service would bound to namespace
 * Each micro service will have one service
 
 * Docker:- Container Port: host port
@@ -37,7 +37,7 @@ metadata:
     name: svc-color
 spec:
     Selector: 
-        color: gree # For which pod I should route the traffic
+        color: green # For which pod I should route the traffic
     type: NodePort
     ports: 80 # service port, it is optional, if it is not specified, target port will be the svc port by default.
     protocol: TCP
@@ -139,7 +139,7 @@ kubectl describe deployment my-deployment
 ```
 kubectl apply -f deployment.yaml
 ```
-*Set a new image for a Deployment:
+* Set a new image for a Deployment:
 ```
 kubectl set image deployment/my-deployment my-container=my-image:tag
 ```
@@ -149,7 +149,7 @@ kubectl scale deployment my-deployment --replicas=3
 ```
 **Rolling Update and Rollback**
 
-*Perform a rolling update:
+* Perform a rolling update:
 ```
 kubectl rollout restart deployment/my-deployment
 ```
