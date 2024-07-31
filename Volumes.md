@@ -1,13 +1,13 @@
 # Volumes:
 
 ## Types of volumes
-hostPath (k8s) ----- bindmount (docker)
-emptydir (k8s) ----- tmpfs (docker)
-volumes (k8s) ----- volumes (docker)
+* hostPath (k8s) ----- bindmount (docker)
+* emptydir (k8s) ----- tmpfs (docker)
+* volumes (k8s) ----- volumes (docker)
 
 ## Provisinings:
 
-### there are 2 types of provisinings
+### There are 2 types of provisinings
  * Static type -> someone creates and I use it
  * Dynamic type
 
@@ -26,9 +26,9 @@ volumes (k8s) ----- volumes (docker)
 * StorageClasses (SC)
 
 * While creating the PV, few important things I need 
-    name:
-    size: 10
-    AccessMode: ReadWriteOnce (RWO), ReadOnlyMany, ReadWriteMany (RWX), ReadWriteOncePod
+    - name:
+    - size: 10
+    - AccessMode: ReadWriteOnce (RWO), ReadOnlyMany, ReadWriteMany (RWX), ReadWriteOncePod
 
     ![Pv to Pvc flow](/images/PV-Pvc.png)
 
@@ -56,6 +56,43 @@ spec:
   - Retain -- Keep all data
   - Delete --> delete the underlying storage resource automatically (only work in cloud storage resource)
   - Recycle --> delete all the data inthe underlying storage resource
+
+ a **PersistentVolumeReclaimPolicy** is a policy that determines what happens to a PersistentVolume (PV) when its associated PersistentVolumeClaim (PVC) is deleted. This policy is set on the PV and controls the volume's lifecycle after the PVC has released it.
+
+ ### Types of PersistentVolumeReclaimPolicy
+
+Kubernetes supports three main types of reclaim policies for PersistentVolumes:
+
+1. **Retain**
+2. **Delete**
+3. **Recycle** (Deprecated)
+
+
+#### 1. Retain
+
+- **Description:** The `Retain` policy ensures that the PersistentVolume and its data are preserved after the associated PVC is deleted. The volume is disassociated from the claim, but the data remains intact and the volume is not automatically made available for new claims.
+- **Use Case:** Suitable when you want to preserve the data for manual backup, audit, or reuse purposes. After a PVC is deleted, an administrator must manually reclaim the volume, reattach it to another PVC, or clean up the data.
+- **Consideration:** With the `Retain` policy, administrators have to handle the cleanup or manual reassignment of the PersistentVolume.
+
+#### 2. Delete
+
+- **Description:** The `Delete` policy automatically deletes the PersistentVolume and the associated storage resource (like an AWS EBS volume, Google Cloud Disk, or Azure Disk) when the PVC is deleted. This policy is useful for temporary data storage that does not need to be preserved.
+- **Use Case:** Commonly used in environments where data does not need to be retained after the pod using it is terminated, such as for scratch space, temporary data, or non-critical applications.
+- **Consideration:** This policy results in the loss of data on the volume upon PVC deletion, so it should be used when data retention is not required.
+
+#### 3. Recycle (Deprecated)
+
+- **Description:** The `Recycle` policy would scrub the data on the PersistentVolume (i.e., delete all files) and make the volume available for new PVCs to claim. However, this policy is deprecated and not recommended for use in newer Kubernetes versions.
+- **Use Case:** Previously used for simple use cases where data scrubbing was sufficient before making the volume available again. Replaced by more secure and flexible data management practices.
+- **Consideration:** Since `Recycle` is deprecated, it is recommended to use other methods for managing PV lifecycle and data sanitization.
+
+### Choosing the Right Reclaim Policy
+
+- **Data Sensitivity:** If the data is sensitive or must be preserved, use `Retain` and manage the volume manually.
+- **Cost Considerations:** Use `Delete` if you want to automatically clean up resources and reduce costs.
+- **Security:** Ensure secure handling of data, especially with policies that involve automatic deletion or data scrubbing.
+
+Selecting the appropriate `PersistentVolumeReclaimPolicy` depends on your application’s data retention needs, security requirements, and operational practices.
 
 * Persistent Volume
 
@@ -128,7 +165,7 @@ spec:
 
 ```
 
-* to debug inside the pod use below command
+* To debug inside the pod use below command
 ```
 kubectl exec -it <pod_name> /bin/bash
 
@@ -148,21 +185,21 @@ cd /output/
   ## Storage Class
   ![gcp storage class object by default](/images/gcp_storageclass.png)
 
-* below snipppet it for Storage class
+* Below snipppet it for Storage class
   ```
-    apiVersion: storage.k8s.ip/v1
-    kind: StorageClass
-    metadata:
+  apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
     name: gold
-    provisioner: kubernetes.io/gce-pd
-    allowVolumeExpansion: true
-    parameters:
+  provisioner: kubernetes.io/gce-pd
+  allowVolumeExpansion: true
+  parameters:
     type: pd-ssd
 
   ```
   
  <p>
- __allowVolumeExpansion__ property from above manifest is helping to expand the size on demand basis, with out this attribute, once memory is full with existing size, memory can't expand.
+ **allowVolumeExpansion** property from above manifest is helping to expand the size on demand basis, with out this attribute, once memory is full with existing size, memory can't expand.
  </p>
 
   ```
@@ -177,6 +214,7 @@ cd /output/
       requests:
         storage: 20Gi
   ```
+
 * When dynamic volume allocation, once storage class is created, one can directly create the PVC, System will automatically creates the respective PV and binding.
 
 * So in Static type,
@@ -285,7 +323,50 @@ public class Program
             });
 }
 ```
+---
+In Kubernetes, PersistentVolumes (PVs) and PersistentVolumeClaims (PVCs) are used to manage storage resources. The distinction between static and dynamic provisioning types affects how these resources are created and managed. Here’s a breakdown of the differences in the context of static and dynamic volume provisioning:
 
+### Static Volume Provisioning
+
+**PersistentVolume (PV):**
+- **Manual Creation:** In static provisioning, the PVs are created manually by an administrator before they are used by any PVCs. This involves specifying the storage details like size, access modes, and the underlying storage resource.
+- **Pre-defined:** The details of the PV, including its size and storage class, are pre-defined and cannot be changed once set.
+- **Binding:** When a PVC is created, it must match the criteria (such as storage capacity and access mode) of an existing PV for binding to occur. The administrator must ensure that PVs are available and match the requirements of the PVCs that will claim them.
+
+**PersistentVolumeClaim (PVC):**
+- **Manual Request:** A PVC is a request for storage by a user or application. It specifies the desired storage size, access modes, and optionally, the storage class.
+- **Binding Process:** Kubernetes matches a PVC to a suitable existing PV. If a matching PV is found, the PVC is bound to it. If no suitable PV is available, the PVC remains unbound until an appropriate PV is created.
+- **Predefined Matching:** The PVC relies on manually created PVs being available. The storage size and characteristics must be predetermined and carefully managed.
+
+### Dynamic Volume Provisioning
+
+**PersistentVolume (PV):**
+- **Automatic Creation:** In dynamic provisioning, the PVs are automatically created by Kubernetes when a PVC is made. The creation of the PV is handled by a storage provisioner that understands the storage backend.
+- **On-Demand:** PVs are not pre-created; instead, they are provisioned as needed, based on the specifications in the PVC and the associated StorageClass.
+- **Flexibility:** This method allows for more flexible and scalable storage management, as the PVs are created to match the exact specifications requested by the PVCs.
+
+**PersistentVolumeClaim (PVC):**
+- **Dynamic Request:** Similar to static provisioning, a PVC specifies the required storage size, access modes, and storage class. However, with dynamic provisioning, the PVC also triggers the creation of the PV.
+- **StorageClass Dependency:** The PVC must specify a StorageClass, which defines the storage type, parameters, and the provisioner to be used. The StorageClass handles the details of PV creation.
+- **Automated Binding:** Once the PV is created by the provisioner, it is automatically bound to the PVC. This simplifies the user's experience, as they do not need to worry about the availability of matching PVs.
+
+### Key Differences Between Static and Dynamic Provisioning
+
+1. **Provisioning Method:**
+   - **Static:** PVs are manually created and managed by administrators.
+   - **Dynamic:** PVs are automatically created when PVCs are made, based on a predefined StorageClass.
+
+2. **Flexibility:**
+   - **Static:** Less flexible, as PVs must exist before PVCs can bind to them, and changes require manual intervention.
+   - **Dynamic:** More flexible, with on-demand provisioning tailored to the needs of PVCs.
+
+3. **Management Overhead:**
+   - **Static:** Higher, requiring careful planning and management of storage resources and PV-PVC matching.
+   - **Dynamic:** Lower, as the system handles PV creation and management, reducing the need for manual intervention.
+
+4. **Scalability:**
+   - **Static:** May face limitations in scalability, especially in environments with dynamic or unpredictable storage needs.
+   - **Dynamic:** Better suited for environments that require scalability and flexibility, such as cloud-native applications or microservices architectures.
 ---
 ## Various types of Volumes supported in Kubernetes
 In Kubernetes, there are several types of volumes available, each suited to different use cases. Here’s an overview of the main volume types, their use cases, and considerations for when not to use them:

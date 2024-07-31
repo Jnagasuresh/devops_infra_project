@@ -70,14 +70,14 @@ echo -n 'password12345' | base64
  </p>
 
 ```
- apiVersion: v1
- kind: Secret
- metadata:
-    name: my-secret
-data:
-    secret1: <encoded_value>
-    secret2: <encoded_value>
-    ```
+  apiVersion: v1
+  kind: Secret
+  metadata:
+      name: my-secret
+  data:
+      secret1: <encoded_value>
+      secret2: <encoded_value>
+```
 
 ```
 kubectl get secret
@@ -107,6 +107,7 @@ kubectl describe secret my-secret
                         name: my-config
                         key: name
 ```
+
 
 
 ```

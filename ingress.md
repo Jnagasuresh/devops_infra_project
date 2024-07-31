@@ -103,6 +103,11 @@ spec:
           ports:
             - containerPort: 80
 ```
+![cloud-ingress-flow](/images/cloud_ingress.png)
+
+* when service is created, automatically network loadbalancer (L4) will be created ( it is not application load balancer)
+* When ingress controller is created, application load balancer (L7) will be created.
+
 ---
 ```
 apiVersion: v1
@@ -120,6 +125,8 @@ spec:
       targetPort: 80
       nodePort: 30080  # Optional: specify a fixed node port if required, or let Kubernetes assign a random one
 ```
+![Load Balancer](/images/LB.png)
+![Ingress controller](/images/ingress.svg)
 ---
 ```
 apiVersion: networking.k8s.io/v1
@@ -153,3 +160,11 @@ spec:
                   number: 80
 
 ```
+
+* to get load of the cpu's, below command will be usefull.
+```
+kubectl top pod
+```
+
+* HPA vs VPA
+* Horizontal Pod autoscalaer vs vertical Pod auto scaler

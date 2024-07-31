@@ -2,6 +2,7 @@ Here are 20 of the most popular Docker commands that you will find useful for ma
 
 1. **docker run**  
    Run a container from an image. Example:
+   > Note: there is a option to state **p** and **P**. Capital P will be allocated random port where as small "p" will be required to mention during the command.
    ```sh
    docker run -d -p 80:80 nginx
    ```
