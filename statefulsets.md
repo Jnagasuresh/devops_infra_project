@@ -9,7 +9,7 @@
 ![statefulset](/images/statefulset.png)
 
 * Stateful sets are head less services. automatically POD will have IPaddress.
-* Headless Service: Satefulsets automatically create a Headless service, which allows each pod to haveits own DNS entry. this enables direct communication between pods using their unique hostnames.
+* Headless Service: Satefulsets automatically create a Headless service, which allows each pod to haveits own **DNS** entry. this enables direct communication between pods using their unique hostnames.
 
 * STS supports both HPA and VPA.
 * Ordered Termination when scaling down

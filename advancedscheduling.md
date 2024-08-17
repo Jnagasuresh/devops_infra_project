@@ -67,8 +67,10 @@ spec:
 ```
 
 * if the nodeselector is removed, it won't effect the running pod.
+
 * A node selector is used, during the placement of the pod, not during the execution of the pod
-* when we remove the lablel of the node and then if pod is terminated due to some reason, and when the new pod is getting created, will the pods be created or not?
+
+* When we remove the label of the node and then if pod is terminated due to some reason, and when the new pod is getting created, will the pods be created or not?
  - **Pod won't be created instead it will be in pending state.**
 
 * Below command would help to remove the label from the node
@@ -90,7 +92,7 @@ kubectl label node workder-2 disktype-
   - Does the node have adequate hardware resources?
   - Is the node running out of resources/capacity?
   - Does the pod requests a specific node?
-  - Does the node have matching labes?
+  - Does the node have matching labels?
   - If the pod requests a port number, is it available on the node?
   - Are taints and tolerations avialable?
 
@@ -109,7 +111,7 @@ kubectl label node workder-2 disktype-
 
   * affinity is based on multiple conditions, where as Nodename and node selector works based on single condition.
 
-  ```
+  ```yml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -141,6 +143,7 @@ kubectl label node workder-2 disktype-
                         - thin
   ```
 
+* using below command, add label to existing node.
   ```
   kubectl label node worker-1 disktype=ssd --overwrite
   ```
@@ -205,7 +208,7 @@ These terms define the behavior of affinity rules concerning pod scheduling and 
   - **During Scheduling:** The scheduler will only place the pod on nodes that match the required conditions. If no such nodes are available, the pod will remain unscheduled.
   - **Ignored During Execution:** Similar to `preferredDuringSchedulingIgnoredDuringExecution`, these rules are ignored once the pod is running. If the conditions change after the pod has been scheduled, it will not be rescheduled based on this rule.
 
-- **Use Case:** Necessary when the placement of pods must strictly adhere to certain conditions, such as compliance, data locality, or specific hardware requirements.
+- **Use Case:** Necessary when the placement of pods must strictly adhere to certain conditions, such as **compliance**, **data locality**, or **specific hardware** requirements.
 
 ### Example Scenarios
 

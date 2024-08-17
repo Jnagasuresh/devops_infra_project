@@ -177,7 +177,7 @@ cd /output/
 
 ### Storage Class
   - it will allo k8s admin to specifigy the type of storage service they offer on the k8s
-
+  - storage class volumes are immutable
 ```
   ~/.kube/config
   ```
@@ -339,6 +339,9 @@ In Kubernetes, PersistentVolumes (PVs) and PersistentVolumeClaims (PVCs) are use
 - **Predefined Matching:** The PVC relies on manually created PVs being available. The storage size and characteristics must be predetermined and carefully managed.
 
 ### Dynamic Volume Provisioning
+![Dynamic Volume flow](/images/volumesflow.png)
+* 6. The SC creates the PV and maps it tothe EBS volume on the AWS back end
+* 7. The pod mounts the PV and uses it
 
 **PersistentVolume (PV):**
 - **Automatic Creation:** In dynamic provisioning, the PVs are automatically created by Kubernetes when a PVC is made. The creation of the PV is handled by a storage provisioner that understands the storage backend.

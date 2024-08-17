@@ -85,8 +85,8 @@
   - This will allow you to define the amount of resources (CPU, Memory) you expect a container to use.
   - The k8s scheduler will use resources requests to avoid scheduling the pods on the nodes that do not have enough available resources
 * Resources Requests & Limits:
-  -  this will povide a way for you to limit the amount of resources your container can use.
-  -  the container runtime, is responsible for enforcing the limits..
+  -  This will povide a way for you to limit the amount of resources your container can use.
+  -  The container runtime, is responsible for enforcing the limits..
 
   ```
    apiVersion: v1

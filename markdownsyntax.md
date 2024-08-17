@@ -205,3 +205,113 @@ Thank you for reading!
 ```
 
 Using these elements will help you create well-structured and readable Markdown documentation.
+---
+In Markdown, you can specify syntax highlighting for code blocks by appending the language identifier after the opening triple backticks (```). This helps in rendering the code with appropriate syntax highlighting for the specified language. Here are some commonly used language identifiers:
+
+### Commonly Used Language Identifiers
+
+- **Bash/Shell**: `sh`, `bash`, `shell`
+- **YAML**: `yaml`, `yml`
+- **JSON**: `json`
+- **JavaScript**: `js`, `javascript`
+- **TypeScript**: `ts`, `typescript`
+- **Python**: `py`, `python`
+- **Java**: `java`
+- **C#**: `csharp`, `cs`
+- **C++**: `cpp`
+- **HTML**: `html`
+- **CSS**: `css`
+- **SQL**: `sql`
+- **Go**: `go`
+- **Ruby**: `rb`, `ruby`
+- **PHP**: `php`
+- **Perl**: `perl`
+- **PowerShell**: `powershell`
+- **Dockerfile**: `dockerfile`
+- **Terraform**: `terraform`
+- **Kubernetes**: `kubernetes`
+- **Markdown**: `md`, `markdown`
+
+### Example Usage
+
+Here are some examples of how to use these language identifiers in Markdown for proper syntax highlighting:
+
+#### Bash/Shell
+
+```sh
+terraform plan -var="instance_type=t2.micro" -var="instance_count=3"
+```
+
+#### YAML
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mycontainer
+    image: myimage
+```
+
+#### JSON
+
+```json
+{
+  "name": "example",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
+```
+
+#### JavaScript
+
+```javascript
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+```
+
+#### Python
+
+```python
+def greet(name):
+    return f"Hello, {name}!"
+```
+
+#### HTML
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Hello, world!</h1>
+</body>
+</html>
+```
+
+#### SQL
+
+```sql
+SELECT * FROM users WHERE id = 1;
+```
+
+#### Terraform
+
+```terraform
+resource "aws_instance" "example" {
+  instance_type = "t2.micro"
+  count         = 3
+}
+```
+
+### Conclusion
+
+By using these language identifiers, you can ensure that your code blocks are highlighted correctly in Markdown documents. This makes your code more readable and easier to understand.

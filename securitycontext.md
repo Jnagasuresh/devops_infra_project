@@ -38,7 +38,7 @@ There are multiple ways to authenticate to the cluster
 * To create CSR, use below command, we need to use previously generated key to create CSR
     > openssl req -new -key maha.key -out maha.csr -subj "/CN=maha/O=development"
 
- * Copy ca.crt and ca.key from cluster to maha user home foler in laptop or jumpserver
+ * Copy ca.crt and ca.key from cluster to maha user home folder in laptop or jumpserver
 
 > scp ca.crt maha@34.171.18.121:/home/maha
  > scp ca.key maha@34.171.18.121:/home/maha
@@ -354,8 +354,64 @@ DaemonSets provide a straightforward and efficient way to manage these essential
    -  name: nginx
       image: nginx
 ```
+A static pod in Kubernetes is a type of pod that is managed directly by the kubelet on a specific node, rather than being managed by the Kubernetes API server. This means that static pods are not visible through the Kubernetes API and do not have associated objects like Deployments, ReplicaSets, or DaemonSets.
+
+### Key Characteristics of Static Pods
+
+1. **Node-Specific Configuration:** Static pods are defined in configuration files located on a specific node. The kubelet on that node reads these configuration files and ensures that the described pods are running.
+
+2. **No API Server Involvement:** Unlike regular pods, static pods are not managed by the Kubernetes control plane (API server and scheduler). They are created and managed solely by the kubelet running on the node where the configuration files reside.
+
+3. **Lifecycle Management:** The kubelet continuously monitors the static pod's configuration file. If the file is modified, the kubelet will restart the pod to match the new configuration. If the pod crashes or is deleted, the kubelet will recreate it based on the configuration file.
+
+4. **No Replication:** Static pods are tied to the specific node and cannot be scheduled on other nodes by the scheduler. If a node fails, the static pods on that node are lost unless manually configured on another node.
+
+5. **Use Cases:** Static pods are often used for critical system components like kube-apiserver, kube-controller-manager, kube-scheduler, and etcd in the context of setting up a Kubernetes control plane. They are also used for troubleshooting and debugging, where running a pod directly on a node can be useful.
+
+### Configuration and Management
+
+Static pods are defined in JSON or YAML files placed in a directory specified by the kubelet’s `--pod-manifest-path` flag. The kubelet watches this directory and manages the pods accordingly. Because they are not visible through the Kubernetes API, the status of static pods is not directly accessible through standard Kubernetes tools like `kubectl`. However, the kubelet does create a mirror pod on the API server, which serves as a placeholder to represent the static pod. This mirror pod is read-only and cannot be managed using API server commands.
   ## Mirror Pods
 
+## POD Lifecycle
+The lifecycle of a pod in Kubernetes encompasses various stages from its creation to termination. Understanding the pod lifecycle is essential for managing applications effectively, troubleshooting issues, and optimizing resource usage. Here’s an overview of the different phases a pod can go through:
+
+### 1. **Pending**
+
+- **Description:** The pod has been accepted by the Kubernetes system but one or more of its containers have not been created. This phase includes time spent waiting for the scheduler to assign the pod to a node, as well as time spent downloading container images.
+- **Common Causes:** Image pulls, resource constraints, or scheduling delays.
+
+### 2. **Running**
+
+- **Description:** The pod has been bound to a node and all containers have been created. At least one container is still running, or is in the process of starting or restarting.
+- **Characteristics:** This phase indicates that the pod is active and at least one container is operational.
+
+### 3. **Succeeded**
+
+- **Description:** All containers in the pod have terminated successfully and will not be restarted. This phase is typically seen in pods designed for one-time tasks, such as batch jobs or cron jobs.
+- **Characteristics:** The pod remains in the cluster until it is deleted by a user or by a cleanup process.
+
+### 4. **Failed**
+
+- **Description:** All containers in the pod have terminated, and at least one container has terminated with a failure (non-zero exit code).
+- **Characteristics:** Similar to the `Succeeded` phase, but indicates an error or issue occurred in the pod's execution.
+
+### 5. **CrashLoopBackOff**
+
+- **Description:** The pod has failed and is being restarted, but Kubernetes is backing off due to repeated failures.
+- **Characteristics:** This phase indicates that there is an issue causing the containers to crash repeatedly, and Kubernetes is throttling restarts to prevent resource exhaustion.
+
+### 6. **Terminating**
+
+- **Description:** The pod is in the process of being terminated due to a deletion request or a scaling down event.
+- **Characteristics:** The pod remains in this phase until all running containers are stopped and any finalizers are completed.
+
+### 7. **Unknown**
+
+- **Description:** The state of the pod cannot be determined, usually due to communication errors with the node where the pod is running.
+- **Characteristics:** This phase indicates a transient or unexpected issue, often related to network or node problems.
+
+Each phase provides insight into the state of a pod and helps administrators manage resources, troubleshoot issues, and ensure that applications are running smoothly in the Kubernetes environment.
 
 ## HA
 
