@@ -1,9 +1,191 @@
 # Volumes:
 
+[Volumes documentation](https://kubernetes.io/docs/concepts/storage/volumes/#volume-types)
+
+* Container data is ephirmal, once continer or pod is terminated, kubernetes last data.
+
+
+Kubernetes volumes provide a way for containers within a pod to access shared storage. Volumes in Kubernetes solve the problem of ephemeral storage in containers, allowing data to persist across container restarts or to be shared between containers in the same pod. Kubernetes supports a variety of volume types, each suited to different use cases.
+
+### Key Characteristics of Kubernetes Volumes
+
+- **Pod-Level Storage:** Volumes are defined at the pod level and can be mounted into one or more containers within the pod.
+- **Persistent Storage:** Unlike container-local storage, volumes are persistent as long as the pod is running, and in the case of persistent volumes, even beyond the lifecycle of the pod.
+- **Shared Access:** Multiple containers within the same pod can share the same volume, enabling inter-container communication via file sharing.
+
+### Types of Kubernetes Volumes
+
+1. **emptyDir**
+   - **Description:** A simple volume that is created when a pod is assigned to a node and exists as long as the pod is running. It is typically used for temporary storage.
+   - **Use Case:** Scratch space, caching, and temporary files shared between containers in a pod.
+   - **Data Persistence:** Data is lost when the pod is deleted.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: temp-storage
+       emptyDir: {}
+     ```
+
+2. **hostPath**
+   - **Description:** Mounts a file or directory from the host node's filesystem into the pod. It provides access to the host's storage but is not portable between nodes.
+   - **Use Case:** Accessing specific files on the host, logs, or running a daemon that requires host-level access.
+   - **Data Persistence:** Data persists on the host even after the pod is deleted.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: host-storage
+       hostPath:
+         path: /data
+     ```
+
+3. **persistentVolumeClaim (PVC)**
+   - **Description:** A way to request dynamically provisioned storage using Persistent Volumes (PVs). The PVC abstracts the underlying storage provider.
+   - **Use Case:** Long-lived storage that persists beyond the lifecycle of a pod, such as databases or data shared between pods.
+   - **Data Persistence:** Data is persistent, surviving pod restarts and deletions.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: my-pvc
+       persistentVolumeClaim:
+         claimName: my-claim
+     ```
+
+4. **configMap**
+   - **Description:** Used to inject configuration data into pods as files or environment variables. ConfigMaps store non-sensitive data like configuration files.
+   - **Use Case:** Injecting configuration data, scripts, or other non-sensitive information into a pod.
+   - **Data Persistence:** Data is managed by the ConfigMap and does not persist after the ConfigMap is deleted.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: config-volume
+       configMap:
+         name: my-config
+     ```
+
+5. **secret**
+   - **Description:** Similar to ConfigMap, but used for storing sensitive data like passwords, tokens, and keys. Secrets can be mounted as files or exposed as environment variables.
+   - **Use Case:** Injecting sensitive information securely into pods.
+   - **Data Persistence:** Data is managed by the Secret and does not persist after the Secret is deleted.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: secret-volume
+       secret:
+         secretName: my-secret
+     ```
+
+6. **nfs (Network File System)**
+   - **Description:** Allows a pod to mount an NFS share as a volume. NFS volumes enable multiple pods across different nodes to access shared storage.
+   - **Use Case:** Shared storage across pods and nodes, suitable for distributed applications.
+   - **Data Persistence:** Data persists on the NFS server and is independent of the pod lifecycle.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: nfs-storage
+       nfs:
+         server: nfs-server.example.com
+         path: /shared-data
+     ```
+
+7. **gitRepo**
+   - **Description:** Clones a Git repository into a volume. This can be used for initializing a pod with code or configuration from a Git repository.
+   - **Use Case:** Deploying code or configuration from a Git repository into a pod.
+   - **Data Persistence:** Data is initialized at pod start, and changes are not persistent after the pod is restarted.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: git-volume
+       gitRepo:
+         repository: "https://github.com/example/repo.git"
+         revision: "master"
+     ```
+
+8. **awsElasticBlockStore (EBS)**
+   - **Description:** Mounts an Amazon EBS volume into a pod. The volume must be in the same AWS availability zone as the node.
+   - **Use Case:** Persistent storage in AWS for databases, file storage, etc.
+   - **Data Persistence:** Data persists beyond the pod's lifecycle and can be reattached to different pods.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: ebs-storage
+       awsElasticBlockStore:
+         volumeID: <volume-id>
+         fsType: ext4
+     ```
+
+9. **azureDisk / azureFile**
+   - **Description:** Mounts Azure Disk or Azure File storage into a pod.
+   - **Use Case:** Persistent storage for Azure-based Kubernetes clusters.
+   - **Data Persistence:** Data persists beyond the pod's lifecycle and can be reattached.
+   - **Example:**
+     ```yaml
+     volumes:
+     - name: azure-disk-storage
+       azureDisk:
+         diskName: <disk-name>
+         diskURI: <disk-uri>
+     ```
+
+10. **csi (Container Storage Interface)**
+    - **Description:** A general interface for plugging in different storage systems. CSI volumes allow Kubernetes to use storage from various providers via CSI drivers.
+    - **Use Case:** Dynamic provisioning and management of storage from multiple vendors.
+    - **Data Persistence:** Depends on the underlying storage provider.
+    - **Example:**
+      ```yaml
+      volumes:
+      - name: csi-volume
+        csi:
+          driver: csi.driver.example.com
+          volumeHandle: volume-handle
+      ```
+
+11. **persistentVolume**
+    - **Description:** Represents a piece of storage in the cluster, provisioned by an administrator or dynamically. Pods can claim this volume using a PersistentVolumeClaim (PVC).
+    - **Use Case:** Durable storage that can be used by pods across the cluster.
+    - **Data Persistence:** Data is persistent and managed outside of the pod lifecycle.
+    - **Example:**
+      ```yaml
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: my-pv
+      spec:
+        capacity:
+          storage: 10Gi
+        accessModes:
+          - ReadWriteOnce
+        hostPath:
+          path: /mnt/data
+      ```
+
+12. **projected**
+    - **Description:** Combines several volume sources (e.g., ConfigMaps, Secrets, downward API) into a single volume.
+    - **Use Case:** Consolidating multiple sources into one volume for easier management and access.
+    - **Data Persistence:** Managed by the underlying volume sources (e.g., ConfigMaps, Secrets).
+    - **Example:**
+      ```yaml
+      volumes:
+      - name: projected-volume
+        projected:
+          sources:
+          - configMap:
+              name: my-config
+          - secret:
+              name: my-secret
+      ```
+
+### Summary
+
+- **Ephemeral Volumes** (e.g., `emptyDir`, `gitRepo`): Temporary storage that exists only as long as the pod exists.
+- **Persistent Volumes** (e.g., `persistentVolumeClaim`, `nfs`, `awsElasticBlockStore`): Storage that persists beyond the lifecycle of a pod and can be used across multiple pods.
+- **Specialized Volumes** (e.g., `configMap`, `secret`): Used for injecting configuration data and secrets into pods.
+
+Kubernetes volumes provide flexibility in managing storage, allowing you to choose the right type of volume for your application's needs, whether it's temporary storage, persistent data, or configuration management.
+
 ## Types of volumes
-* hostPath (k8s) ----- bindmount (docker)
-* emptydir (k8s) ----- tmpfs (docker)
-* volumes (k8s) ----- volumes (docker)
+* `hostPath (k8s) ----- bindmount (docker)`
+* `emptydir (k8s) ----- tmpfs (docker)`
+* `volumes (k8s) ----- volumes (docker)`
 
 ## Provisinings:
 
@@ -11,14 +193,15 @@
  * Static type -> someone creates and I use it
  * Dynamic type
 
- * Persistent volumes (PV) are at cluster level
- * Persistent volume claims(pvc) are at namespace level.
+ * **`Persistent volumes (PV) are at cluster level`**
+ * **`Persistent volume claims(pvc) are at namespace level.`**
 
- * Pv and PVC has one to one binding
+ * **Pv and PVC has one to one binding**
 
  ![volume_dia1](/images/volume1.png)
 
  [volumes](/docs/svc_volume.pdf)
+
 ![Big Picture](/images/storage.png)
 
 * PersistentVolumes (PV)
