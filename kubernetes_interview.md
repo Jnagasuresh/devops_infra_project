@@ -1,3 +1,39 @@
+
+## Kubernetes:
+ * Scalability and High availability capability
+ * Self Healing capability
+ * It helps to run docker more efficiently
+ * ContainerD is the lighter version of the Docker.
+ * Below are the containerization tools.
+    - CRIO
+    - ContainerD
+    - Docker
+## Kubernetes architecture
+ * **Master Node**:
+   - API Server
+   - ControllerManager
+   - Scheduler
+   - Etcd
+   - Kubeproxy
+   - Kubectl
+   ![kubernetes](/images/k8s_arc.png)
+   ![Kubernetes components](/images/kubernetes_components.svg)
+
+ * **Worker Node**
+   - Container run time (docker)
+   - Kubeproxy
+ 
+ * **API Server**: 
+    All the cluster configurations are stored in .kube/config file
+   > kubectl config get-context
+   > kubectl config use-context <context_name>
+   * api server is entry point of the cluster and it helps to authenticate the cluster.
+   * AuthN and AuthZ
+ * **Controller Manager**: 
+ * **Schedular**: 
+ * **ETCD Database**: 
+
+
 KUBERNETES INTERVIEW QUESTIONS
 
 1. What are your main Roles and Responsibilities ?

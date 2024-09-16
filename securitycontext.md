@@ -29,7 +29,7 @@ There are multiple ways to authenticate to the cluster
 
 
 * To connect the cluster from either laptop or jumbserver, follow below steps
-  - Genereate a private key for maha user and certificate signing request as well
+  - Genereate a private key for <maha> user and certificate signing request as well
   - Generate a self signed certificate. use the CA keys which are provided by the cluster
 
 * To generate private key, use below command

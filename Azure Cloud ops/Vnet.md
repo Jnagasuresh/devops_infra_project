@@ -75,7 +75,11 @@ Private Endpoints
  * SSL off-loading
  * Offloading
 
+### NAT Network address translation
+* Public IP address: access through internet
+* Private IP address: 
 
+### PAT: Port address translation (Translation is nothing but forwarding)
 
   
 
