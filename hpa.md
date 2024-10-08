@@ -1,3 +1,4 @@
+## Auto Scaling (HPA: Horizontal Pod Autoscaling)
 
 ```yaml
  apiVersion: apps/v1
