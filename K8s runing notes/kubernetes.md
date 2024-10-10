@@ -1219,6 +1219,9 @@ These advanced questions will provide you with a deeper understanding of asynchr
 
 Here are 30 detailed **Azure Kubernetes Service (AKS)** interview questions and answers tailored for an architect-level role. These questions cover both AKS fundamentals and advanced topics, including architecture, deployment, networking, security, and integration with other Azure services.
 
+* In AKS, by default **load balancer** will be created where as in GCP, load balancer will be created on demand.
+
+* In AKS, All the infrastructure components are created in dedicated Resource group, this resource gorup is different from where actual aks cluster is created.
 ---
 
 ### 1. **What is Azure Kubernetes Service (AKS)? How does it differ from regular Kubernetes?**
@@ -1437,3 +1440,13 @@ Here are 30 detailed **Azure Kubernetes Service (AKS)** interview questions and 
 ---
 
 These questions focus on **high-level architecture** and require in-depth knowledge of AKS, Kubernetes, and Azure services. By mastering these areas, you'll be well-prepared for architect-level roles in Azure Kubernetes Service deployments.
+-------------
+
+* ExpressRoute: once established between ISP and azure center?
+* how to verify Ip address conflict when multiple users are connecting
+
+
+* Route Table
+* Self signed cert: each user will have different private key
+
+application gateway vs ingress?
