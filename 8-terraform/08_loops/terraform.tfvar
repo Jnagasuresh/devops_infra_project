@@ -1,0 +1,7 @@
+
+rg_name           =  "linuxrg"
+rg_location       =  "EastUS"
+vnet_name         =  "linuxvnet"
+address_space     =  ["10.10.0.0/16"]
+subnet_name       =  "linuxsubnet01"
+pip               =  "mypip"

@@ -887,9 +887,29 @@ Prometheus is widely adopted in Kubernetes due to its flexibility, scalability, 
     - Kiali  -> 
  - Data Plane
 
-
 * artifacthub.io
 
+Below lable will be defied for given namespace, Label "istio-injection=enabled"
+* kubectl label ns default istio-injection=enabled
+
+* istio will provide optimized route, it is same as kubeproxy in cluster
+* Istio will help to encrypt the communicate between services, by default kuster is not provided the encryption.
+* Istio envy proxy added as sidecar container in each pod, envy prox is automatically added by add the the lable "istio-injection=enabled" to the deployment/service
+![istio](../images/istio.png)
+![istio](../images/istio_arc.png)
+[istio](https://istio.io/latest/docs/ops/deployment/architecture/)
+
+* istio can be installed multiple ways
+  - helm charts
+  - istioctl
+
+  * kiali component provide dashboards.
+  * Istio helps for deployment strategies
+    - Canary
+    - Blug-Green
+    - Rolling updates.
+* **Istio components**
+* Control Plane
 ## Deployment strategies
 Canary 
 Blug Green
